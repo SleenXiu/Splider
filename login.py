@@ -73,7 +73,7 @@ def login(username, password):
         "returntype": "META"
     }
 
-    response = session.post(login_url, data=login_param) 
+    response = session.post(login_url, data=login_param, headers=headers) 
 #todo
 
     text = response.content
