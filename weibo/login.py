@@ -74,11 +74,12 @@ def login(username, password):
     }
 
     response = session.post(login_url, data=login_param, headers=headers) 
-#todo
 
     text = response.content
-    print(text.decode("gbk"))
-    redirect_url = re.findall(r'https%3A%2F%2Fweibo.*retcode%3D0', response.text)[0]
+    redirect_urls = re.findall(r'https%3A%2F%2Fweibo.*retcode%3D0', response.text)
+    if len(redirect_urls) <= 0:
+        return False
+    redirect_url = redirect_urls[0]
     print(redirect_url)
     redirect_url = urllib.parse.unquote(redirect_url)
     res = session.get(redirect_url)
@@ -86,10 +87,11 @@ def login(username, password):
 
     cookie = json.dumps(session.cookies.get_dict())
 
-    f = open('cookie.data','w')
+    f = open('weibo/cookie.data','w')
     f.write(cookie)
     f.close()
 
+    return True
 
 if __name__ == "__main__":
     username = ""

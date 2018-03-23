@@ -4,8 +4,11 @@
 
 import os
 import json
+from .search import search
 
-f = open("cookie.data", "r")
+user = search('陈一发儿')
+
+f = open("weibo/cookie.data", "r")
 cookie = f.read()
 print(cookie)
 
@@ -13,10 +16,7 @@ cookie = json.loads(cookie)
 
 import requests
 
-
 session = requests.session()
-
-session
 
 requests.utils.add_dict_to_cookiejar(session.cookies, cookie)
 

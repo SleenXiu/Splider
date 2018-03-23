@@ -1,2 +1,7 @@
 env/*
 py3env/*
+__pycache__/*
+*.pyc
+*.DS_Store
+*.data
+account.json
