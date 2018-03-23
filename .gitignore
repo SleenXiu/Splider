@@ -5,3 +5,4 @@ __pycache__/*
 *.DS_Store
 *.data
 account.json
+weibo/*.json
