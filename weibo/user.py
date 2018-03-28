@@ -16,7 +16,6 @@ def user():
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
     }
 
-    url = 'http://m.weibo.cn/api/container/getIndex?type=uid&value=1054009064&containerid=1076031054009064'
     baseurl = 'http://m.weibo.cn/api/container/getIndex?'
     params = {
         'type': 'uid',
