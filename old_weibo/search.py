@@ -5,6 +5,7 @@
 import requests
 import urllib
 import json
+from .models import User
 
 def search(username):
 
@@ -28,17 +29,19 @@ def search(username):
 
     url = url + param_en
     print(url)
-    res = session.get(url, headers=headers)
-
-    dd = res.content
-
+    res = session.get(url, headers=headers, verify=False)
+    print(res.status_code)
+    if res.status_code > 300:
+        return None
+    print(res.text)
     data = json.loads(res.text)
 
     cards = data['data']['cards']
     users = cards[1]['card_group']
     user = users[0]['user']
 
-    return user
+    u = User.new_user(user)
+    return u
 
 
 if __name__ == "__main__":

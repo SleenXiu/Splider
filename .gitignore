@@ -6,4 +6,5 @@ __pycache__/*
 *.data
 account.json
 weibo/*.json
-weibo/leancloud_script.py
+*leancloud_script.py
+*.json

@@ -7,7 +7,7 @@ import json
 import urllib
 import re
 import ssl
-from models import Status
+from .models import Status
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
