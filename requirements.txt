@@ -2,4 +2,6 @@ rsa
 requests
 flask
 leancloud
+pymongo
+mongoengine
 
