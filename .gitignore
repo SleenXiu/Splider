@@ -8,3 +8,4 @@ account.json
 weibo/*.json
 *leancloud_script.py
 *.json
+.idea/*
