@@ -5,3 +5,7 @@ leancloud
 pymongo
 mongoengine
 
+
+flask-bootstrap
+flask-login
+flask-wtf

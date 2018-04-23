@@ -2,13 +2,16 @@
 # coding=utf-8
 # author: xsl
 
-import weibo
 
-#weibo.start()
+import os, sys
+from pymongo import ReadPreference
 
-from web import app
+PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
+PARENT_DIR = os.path.join(PROJECT_DIR, os.pardir)
+sys.path.append(PARENT_DIR)
+sys.path.append(PROJECT_DIR)
 
-if __name__ == '__main__':
-#    app.run(host="127.0.0.1", port=8080)
+from mongoengine import connect
+connect(alias='testdb', db='testdb', host='127.0.0.1:27017')
 
-    weibo.main()
+
