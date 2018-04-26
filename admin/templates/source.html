@@ -1,0 +1,70 @@
+{% extends "base.html" %} 
+{% block title %}Source-{{super()}}{% endblock %}
+{% block head %} 
+{{ super() }}
+{% endblock %} 
+{% block page_content %}
+<div>
+    <ul class="nav nav-tabs actions-nav">
+        <li class="active"><a href="javascript:void(0)">Sources</a></li>
+        <li><a href="{{url_for('create_source')}}">Create</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                Add Filter<b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu field-filters">
+                <li><a href="javascript:void(0)" class="filter" onclick="return false;">Title</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Url</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in sources %}
+                <tr>
+                    <th>{{s.id}}</th>
+                    <th>{{s.name}}</th>
+                    <th><a href="{{ s.url }}">{{s.url}}</a></th>
+                    <th><button onclick="DeleteClick('{{s.id}}')">X</button></th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    <div>
+        
+</div>
+{% endblock %} 
+{% block scripts %} 
+{{ super() }}
+<script>
+    function DeleteClick(id) {
+        console.log(id)
+        url = "/delete_source/" + id
+        $.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data : JSON.stringify(""),
+            success : function(data) {
+               console.log("success")
+               console.log(data['msg'])
+               if(data['msg'] == 'ok') {
+                    location.reload();
+               } else {
+                    alert(data['msg'])
+               }
+            }
+        });
+    }
+</script>
+{% endblock %}

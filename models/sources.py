@@ -15,8 +15,17 @@ from mongoengine import (
         )
 
 class Source(Document):
+    meta = {
+        'db_alias': 'testdb',
+        'index_background': True,
+        'indexes': [],
+    }
+    
     id = ObjectIdField(primary_key=True, default=ObjectId)
+    userid = ObjectIdField()
     name = StringField()
     desc = StringField()
     url = StringField()
     type = StringField()
+    extra = StringField()
+

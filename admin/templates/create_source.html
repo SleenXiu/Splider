@@ -1,0 +1,19 @@
+{% extends "base.html" %} 
+{% block title %}New Source-{{super()}}{% endblock %}
+{% block head %} 
+{{ super() }}
+{% endblock %} 
+{% block page_content %}
+<div>
+    <ul class="nav nav-tabs actions-nav">
+        <li ><a href="{{url_for('source')}}">Sources</a></li>
+        <li class="active"><a href="#">Create</a></li>
+    </ul>
+    <div>
+    {{wtf.quick_form(form)}}
+    </div>
+</div>
+{% endblock %} 
+{% block scripts %} 
+{{ super() }}
+{% endblock %}

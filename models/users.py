@@ -14,11 +14,10 @@ from mongoengine import (
 from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
-from flask_login import UserMixin, AnonymousUserMixin
-from admin import login_manager
 from bson import ObjectId
+from flask_login import UserMixin
 
-class User(UserMixin, Document):
+class User(Document, UserMixin):
     meta = {
         'db_alias': 'testdb',
         'index_background': True,
@@ -65,14 +64,3 @@ class User(UserMixin, Document):
         print(self.id)
         return str(self.id)
 
-class AnonymouseUser(AnonymousUserMixin):
-    def is_authenticated(self):
-        return False
-
-login_manager.anonymous_user = AnonymouseUser
-
-@login_manager.user_loader
-def load_user(id):
-    print(id)
-    u = User.objects(id=ObjectId(id)).first()
-    return u
