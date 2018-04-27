@@ -83,10 +83,10 @@ class WeiboSplider():
 
     def get_weiboes_by_userid(self, userid, count):
         # need multiprocessing        
-        
-        
+        pass        
 
 sp = WeiboSplider()
+
 def testLogin():
     if (sp.login('', '')):
         print("login success")
