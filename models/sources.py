@@ -27,5 +27,8 @@ class Source(Document):
     desc = StringField()
     url = StringField()
     type = StringField()
+    thirdid = StringField()
     extra = StringField()
 
+    def save(self, *args, **kwargs):
+        return super(Source, self).save(*args, **kwargs)

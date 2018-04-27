@@ -14,4 +14,5 @@ sys.path.append(PROJECT_DIR)
 from mongoengine import connect
 connect(alias='testdb', db='testdb', host='127.0.0.1:27017')
 
+SOURCE_TYPE = [('weibo', 'weibo'), ("wechat", "wechat"), ("zhihu", "zhihu")]
 

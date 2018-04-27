@@ -23,6 +23,9 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>Desc</th>
+                    <th>ThirdID</th>
+                    <th>Type</th>
                     <th>Url</th>
                     <th>Action</th>
                 </tr>
@@ -32,6 +35,9 @@
                 <tr>
                     <th>{{s.id}}</th>
                     <th>{{s.name}}</th>
+                    <th>{{s.desc}}</th>
+                    <th>{{s.thirdid}}</th>
+                    <th>{{s.type}}</th>
                     <th><a href="{{ s.url }}">{{s.url}}</a></th>
                     <th><button onclick="DeleteClick('{{s.id}}')">X</button></th>
                 </tr>

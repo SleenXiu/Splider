@@ -32,7 +32,6 @@ login_manager.init_app(app)
 
 
 
-
 @app.route('/')
 @login_required
 def index():
@@ -52,13 +51,14 @@ def user():
 @login_required
 def source():
     sources = Source.objects
-    print(sources)
     return render_template('source.html', sources=sources)
+
 
 @app.route('/create_source', methods=['GET', 'POST'])
 @login_required
 def create_source():
     form = CreateSourceForm()
+    form.type.choices = manager.SOURCE_TYPE
     if form.validate_on_submit():
         source = Source()
         source.name = form.name.data
@@ -67,6 +67,7 @@ def create_source():
         source.type = form.type.data
         source.extra = form.extra.data
         source.userid = current_user.id
+        source.thirdid = form.thidrid.data
         source.save()
         return redirect('source')
     return render_template('create_source.html', form=form)

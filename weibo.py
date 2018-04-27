@@ -76,6 +76,9 @@ class WeiboSplider():
             print('search error:'+ str(response.status_code))
             return None
         data = json.loads(response.text).get('data')
+        cards = data.get('cards')
+        if len(cards) < 1:
+            return None
         card = data.get('cards')[1]
         user_group = card.get('card_group')
         user = user_group[0].get('user')

@@ -1,10 +1,15 @@
 # coding=utf-8
 # author:xsl
+import os, sys
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_DIR = os.path.join(CURRENT_DIR, os.pardir)
+sys.path.append(PROJECT_DIR)
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, SelectField,TextField
 from wtforms.validators import Required, Length, DataRequired
 from wtforms import ValidationError
+import manager
 
 class LoginForm(FlaskForm):
     email = StringField(u'邮箱', validators=[Required(), Length(1, 64)])
@@ -15,7 +20,8 @@ class LoginForm(FlaskForm):
 class CreateSourceForm(FlaskForm):
     name = StringField(u'名称', validators=[Required()])
     url = StringField(u'地址', validators=[Required()])
+    thidrid = StringField(u'外部标识', validators=[])
     desc = StringField(u'描述', validators=[])
-    type = SelectField(u'类型', validators=[Required()], choices=[('0', 'weibo'),('1', 'wechat'),('2', 'zhihu')])
+    type = SelectField(u'类型', validators=[Required()], choices=[])
     extra = TextField(u'其他', validators=[])
     submit = SubmitField(u'创建')
