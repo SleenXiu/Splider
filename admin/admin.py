@@ -1,4 +1,4 @@
-# coding=utf-8
+#coding=utf-8
 # author:xsl
 
 import os, sys
@@ -8,13 +8,20 @@ sys.path.append(PROJECT_DIR)
 
 import manager
 from functools import wraps
-from flask import Flask,url_for, redirect, render_template, session, jsonify
+from flask import Flask,flash,url_for, redirect, render_template, session, jsonify
 from flask_bootstrap import Bootstrap
 from Splider.models import *
-from forms import LoginForm, CreateSourceForm
+from forms import CreateUserForm, LoginForm, EditUserForm, CreateSourceForm
 from werkzeug.local import LocalProxy
 from bson import ObjectId
-from flask_login import login_required, login_user,LoginManager, AnonymousUserMixin, current_user
+from flask_login import (
+        login_required, 
+        login_user,
+        LoginManager, 
+        AnonymousUserMixin, 
+        current_user,
+        logout_user,
+    )
 
 bootstrap = Bootstrap()
 login_manager = LoginManager()
@@ -45,7 +52,8 @@ def post():
 @app.route('/user')
 @login_required
 def user():
-    return render_template('user.html')
+    users = User.objects
+    return render_template('user.html', users=users)
 
 @app.route('/source')
 @login_required
@@ -81,20 +89,73 @@ def delete_source(id):
         return jsonify({'msg':'ok'})
     return jsonify({'msg':'not found'})
 
+@app.route('/delete_user/<id>', methods=['POST'])
+@login_required
+def delete_user(id):
+    u = User.objects(id=ObjectId(id)).first()
+    if u is not None:
+        u.delete()
+        return jsonify({'msg':'ok'})
+    return jsonify({'msg':'not found'})
+
+@app.route('/user/create', methods=['GET', 'POST'])
+@login_required
+def user_create():
+    form = CreateUserForm()
+    if form.validate_on_submit():
+        u = User()
+        u.name = form.name.data
+        u.third_id = form.third_id.data
+        u.third_type = form.third_type.data
+        u.email = form.email.data
+        u.password = form.password.data
+        u.phone = form.phone.data
+        u.type = form.type.data
+        u.save()
+        return redirect(url_for('user'))
+    return render_template('user_create.html', form=form)
+
+@app.route('/user/edit', methods=['GET','POST'])
+@login_required
+def user_edit():
+    form = EditUserForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        avatar = form.avatar.data
+        if len(name) > 0:
+            current_user.name = name
+        if len(avatar) > 0:
+            current_user.avatar = avatar
+        current_user.save()
+        flash('edit ok')
+        return redirect(url_for('index'))
+    return render_template('edit_user.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.objects(email=form.email.data).first()
-        print('sdasads')
         if user is not None and user.check_password(form.password.data):
-#            session['uid'] = str(user.id)
             login_user(user)
             print('5464')
             return redirect(url_for('index'))
         flash(u'无效的邮箱或密码')
     return render_template('login.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/resetpwd/<pwd>', methods=['GET', 'POST'])
+def resetpwd(pwd):
+    u = User.objects(email='xsl@ins.com').first()
+    u.password = pwd
+    u.save()
+    return redirect(url_for('index'))
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):

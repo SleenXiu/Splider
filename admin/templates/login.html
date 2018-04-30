@@ -5,8 +5,8 @@
 {% endblock %} 
 {% block page_content %}
 <div>
-    <h1>欢迎使用Ins后台管理系统</h1>
-    <h3>登录</h3>
+    <h1>iDeep</h1>
+    <h3>Login</h3>
     <form action="{{ url_for('login') }}" method="post">
     {{ form.csrf_token }}
     {{ form.hidden_tag() }}

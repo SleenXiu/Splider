@@ -38,7 +38,7 @@ class User(Document, UserMixin):
     email = StringField()
     password = StringField()
     phone = StringField()
-    type = IntField()
+    type = StringField()
 
     def save(self, *args, **kwargs):
         if self.password:

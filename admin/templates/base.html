@@ -13,9 +13,28 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin.css') }}?v=1.1.5">
-<script type="text/javascript" src="{{ url_for('static', filename='admin.js') }}?v=1.0.2"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin.css') }}?v=1.0.0">
+<script type="text/javascript" src="{{ url_for('static', filename='admin.js') }}?v=1.0.0"></script>
 <style>
+body {
+    padding-bottom: 60px;
+}
+* {
+    box-sizing: border-box;
+}
+.left-side {
+
+}
+.left-side ul {
+    padding: 10px 0;
+}
+.left-sizd-menu li{
+    margin: 10px 0;
+    border-bottom: 1px solid #e2e4e8;
+}
+.left-sizd-menu li>a{
+    margin-left: 10px;
+}
 </style>
 {% endblock %}
 
@@ -30,12 +49,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></spna>
             </button>
-            <a class="navbar-brand" href="#" style="margin-top:5px;">首页</a>
+            <a class="navbar-brand" href="/" style="margin-top:5px;">iDeep</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class ="nav navbar-nav" style="margin-top:5px;">
             {% if current_user %}
-                <li><a href="#">首页</a></li>
+                
             {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -43,9 +62,9 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     {{ current_user.name }}
-                    <ul class="dropdown-menu" style="left:0;">
-                        <li><a href="#">修改密码</a>
-                        <li><a href="#">退出</a></li>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{url_for('user_edit')}}">修改信息</a></li>
+                        <li><a href="{{url_for('logout')}}">退出</a></li>
                     </ul>
                 </li>
                 {% else %}
@@ -65,9 +84,9 @@
         {{ message }}
     </div>
     {% endfor %}
-    <div class="row">
-        <div class="col-md-2">
-            <ul>
+    <div class="row" style="margin-top:30px;">
+        <div class="col-md-2 left-side">
+            <ul class="left-sizd-menu">
                 <li><a href="/">Home</a></li>
                 <li><a href="{{url_for('post')}}">Post</a></li>
                 <li><a href="{{url_for('user')}}">User</a></li>
