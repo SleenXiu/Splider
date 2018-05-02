@@ -43,7 +43,7 @@
                     <th>{{u.type}}</th>
                     <th>
                         <button onclick="DeleteClick('{{u.id}}')">X</button>
-                        <button onclick="EditClick()">E</button>
+                        <button onclick="EditClick('{{u.id}}')">E</button>
                     </th>
                 </tr>
                 {% endfor %}
@@ -56,13 +56,14 @@
 {{ super() }}
 <script>
 function DeleteClick(id) {
-    url = '/delete_user/' + id
+    url = '/user/delete'
+    data = {"id":id}
     $.ajax({
         url: url,
         type: "post",
         dataType: "json",
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify(""),
+        data: JSON.stringify(data),
         success: function(data) {
             if(data['msg'] == 'ok') {
                 location.reload()
@@ -72,8 +73,8 @@ function DeleteClick(id) {
         }
     })
 }
-function EditClick() {
-    location.href = '/user/edit'
+function EditClick(id) {
+    location.href = '/user/edit?id=' + id
 }
 </script>
 {% endblock %}

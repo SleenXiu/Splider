@@ -39,6 +39,10 @@ login_manager.init_app(app)
 
 
 
+from user import user as user_blueprint
+app.register_blueprint(user_blueprint, url_prefix='/user')
+
+
 @app.route('/')
 @login_required
 def index():
@@ -49,9 +53,9 @@ def index():
 def post():
     return render_template('post.html')
 
-@app.route('/user')
+@app.route('/users')
 @login_required
-def user():
+def users():
     users = User.objects
     return render_template('user.html', users=users)
 
@@ -89,14 +93,6 @@ def delete_source(id):
         return jsonify({'msg':'ok'})
     return jsonify({'msg':'not found'})
 
-@app.route('/delete_user/<id>', methods=['POST'])
-@login_required
-def delete_user(id):
-    u = User.objects(id=ObjectId(id)).first()
-    if u is not None:
-        u.delete()
-        return jsonify({'msg':'ok'})
-    return jsonify({'msg':'not found'})
 
 @app.route('/user/create', methods=['GET', 'POST'])
 @login_required
@@ -112,7 +108,7 @@ def user_create():
         u.phone = form.phone.data
         u.type = form.type.data
         u.save()
-        return redirect(url_for('user'))
+        return redirect(url_for('user.index'))
     return render_template('user_create.html', form=form)
 
 @app.route('/user/edit', methods=['GET','POST'])
@@ -149,12 +145,6 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/resetpwd/<pwd>', methods=['GET', 'POST'])
-def resetpwd(pwd):
-    u = User.objects(email='xsl@ins.com').first()
-    u.password = pwd
-    u.save()
-    return redirect(url_for('index'))
 
 
 class AnonymousUser(AnonymousUserMixin):
