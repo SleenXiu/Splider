@@ -64,6 +64,27 @@ class WeiboSplider():
         self.cookie = cookie
         return True
 
+    def search_user_list(self, username):
+        url = 'https://m.weibo.cn/api/container/getIndex?'
+        Config.search_params['queryVal'] = username
+        Config.search_params['containerid'] = '100103type=3&q=' + username
+        params = urllib.parse.urlencode(Config.search_params)
+        url = url + params
+
+        response = self.session.get(url, headers=self.headers, verify=False)
+        if response.status_code > 300:
+            print('search error:'+ str(response.status_code))
+            return None
+        data = json.loads(response.text).get('data')
+        cards = data.get('cards')
+        if len(cards) < 1:
+            return None
+        card = data.get('cards')[1]
+        user_group = card.get('card_group')
+        user = user_group[0].get('user')
+        return user_group
+
+
     def search_user(self, username):
         url = 'https://m.weibo.cn/api/container/getIndex?'
         Config.search_params['queryVal'] = username

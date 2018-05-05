@@ -1,0 +1,86 @@
+{% extends "base.html" %} 
+{% block title %}New Source-{{super()}}{% endblock %}
+{% block head %} 
+{{ super() }}
+{% endblock %} 
+{% block page_content %}
+<div>
+    <ul class="nav nav-tabs actions-nav">
+        <li ><a href="{{url_for('user.index')}}">Users</a></li>
+        <li ><a href="#">Create</a></li>
+        <li class="active"><a href="{{url_for('user.weibo')}}">Weibo</a></li>
+    </ul>
+    <div style="margin-top: 32px;">
+        <label>weiboScreenName:</label>
+        <input id="weibo_name"></input>
+        <button onclick="SearchUser()">Search</button>
+    </div>
+    <div id="search_res" style="margin-top:24px;">
+        
+    </div>
+</div>
+{% endblock %} 
+{% block scripts %} 
+{{ super() }}
+<script>
+var gdata = []
+function CreateUser(i) {
+    u = gdata[i]
+    data = {
+        "tid": u.id,
+        "avatar": u.profile_image_url, 
+        "name": u.screen_name,
+        "type": "weibo"
+    }
+    $.ajax({
+        url: '/user/create',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(res){
+            if (res['msg'] == 'ok') {
+                location.href = '/user'
+            }
+        }
+    })
+}
+function InsSearchReult(data) {
+    gdata = data   
+    users = data//JSON.parse(data)
+    ss = "<ul>"
+    for (i in  users) {
+        u = users[i]
+        s = "<li style=\"margin-top:12px;\"> " +
+        "<img src=\""+u["profile_image_url"]  +"\" width=30 >" + 
+        "<span style=\"font-size:16px; margin-left:10px;\">" + u["screen_name"] +"</span>" +
+        "<button onclick=\"CreateUser("+ i +")\">Create<button>" + 
+        "</li>"    
+        ss = ss + s
+    }
+    ss = ss + "</ul>"
+    res_div = document.getElementById('search_res')
+    //res_div.append(ss)
+    $("#search_res").empty()
+    $("#search_res").append(ss)
+}
+function SearchUser() {
+    name = document.getElementById('weibo_name').value
+    console.log(name)
+    data = {
+        'name':name
+    }
+    $.ajax({
+        url: '/user/weibo_search',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(res){
+            console.log(res)
+            InsSearchReult(res)
+        }
+
+    })
+}
+</script>
+
+{% endblock %}
