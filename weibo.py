@@ -105,8 +105,33 @@ class WeiboSplider():
         user = user_group[0].get('user')
         return user
 
-    def get_weiboes_by_userid(self, userid, count):
-        # need multiprocessing        
+    def get_weiboes_by_userid(self, userid):
+        base_url = 'http://m.weibo.cn/api/container/getIndex?'
+        params = {
+            'type': 'uid',
+            'value': userid,
+            'containerid': '1076031054009064',
+            'page': 1,
+            'count': 20
+        }
+        sl_id = 0
+        mblogs = []
+        maxpage = 10
+        for i in range(0, maxpage):
+            params['page'] = i
+            url = base_url + urllib.parse.urlencode(params)
+            print(url)
+            resp = self.session.get(url, headers=self.headers)
+            result = json.loads(resp.content)
+            data = result['data']
+            cards = data['cards']
+
+            for card in cards:
+                if card.__contains__('mblog'):
+                    mblogs.append(card['mblog'])
+
+        print(mblogs)
+        return mblogs
         pass        
 
 sp = WeiboSplider()
@@ -126,7 +151,9 @@ def testSearch():
 
 def testGet():
     id = '1054009064'
+    sp.get_weiboes_by_userid(id)
 
 if __name__ == "__main__":
-    #testLogin()
-    testSearch()
+    # testLogin()
+    # testSearch()
+    testGet()

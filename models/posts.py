@@ -22,6 +22,7 @@ class Post(Document):
     title = StringField()
     desc = StringField()
     content = StringField()
+    images = ListField()
     source_id = StringField()
     create_at = DateTimeField(default=datetime.datetime.now)
     origin_at = DateTimeField()
