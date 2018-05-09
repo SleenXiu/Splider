@@ -17,6 +17,28 @@
             </ul>
         </li>
     </ul>
+    <div>
+        {% for p in posts %}
+        <p>{{p.text}}</p>
+        {% endfor %}
+    </div>
+    <nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% for i in range(0, pages) %}
+        <li class="{% if i == page %}active{% else %}{% endif %}"><a href="/post?page={{i}}">{{i}}</a></li>
+    {% endfor %}
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
 </div>
 {% endblock %} 
 {% block scripts %} 
