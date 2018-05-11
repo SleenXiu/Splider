@@ -6,6 +6,8 @@ import requests, json, urllib
 import re
 import rsa, binascii, base64
 from weibo_config import Config
+from models import *
+import manager
 
 
 class WeiboSplider():
@@ -15,7 +17,7 @@ class WeiboSplider():
         self.headers = {
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'zh-cn',
-            "Accept-Encoding": "gzip, deflate, br",
+            'Accept-Encoding': 'gzip, deflate, br',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
         
@@ -116,7 +118,7 @@ class WeiboSplider():
         }
         sl_id = 0
         mblogs = []
-        maxpage = 10
+        maxpage = 500
         for i in range(0, maxpage):
             params['page'] = i
             url = base_url + urllib.parse.urlencode(params)
@@ -127,12 +129,33 @@ class WeiboSplider():
             cards = data['cards']
 
             for card in cards:
-                if card.__contains__('mblog'):
-                    mblogs.append(card['mblog'])
+                mblog = card.get("mblog")
+                blog = self._fixBlog(mblog)
+                if blog:
+                    blog.save()
+                    mblogs.append(blog)
 
         print(mblogs)
         return mblogs
-        pass        
+
+    def _fixBlog(self, blog):
+
+        print(blog)
+        if blog is None:
+            return None
+        tid = str(blog.get("id"))
+        b = Post.objects(origin_id=tid).first()
+        if b is None:
+            b = Post()
+        b.origin_id = str(blog.get("id"))
+        b.text = blog.get("text")
+        b.origin_at = blog.get("create_at")
+        b.text = blog.get("text")
+        b.images = blog.get("pics")
+        user = blog.get("user")
+        b.author = user.get("screen_name")
+        b.author_id = str(user.get("id"))
+        return b
 
 sp = WeiboSplider()
 

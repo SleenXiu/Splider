@@ -6,9 +6,10 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 PROJECT_DIR = os.path.join(CURRENT_DIR, os.pardir)
 sys.path.append(PROJECT_DIR)
 
+from mongoengine.queryset import QuerySet
 import manager
 from functools import wraps
-from flask import Flask,flash,url_for, redirect, render_template, session, jsonify
+from flask import Flask,request,flash,url_for, redirect, render_template, session, jsonify
 from flask_bootstrap import Bootstrap
 from Splider.models import *
 from forms import CreateUserForm, LoginForm, EditUserForm, CreateSourceForm
@@ -51,7 +52,11 @@ def index():
 @app.route('/post')
 @login_required
 def post():
-    return render_template('post.html')
+    page = request.args.get("page") or 0
+    page = int(page)
+    all_posts = Post.objects
+    posts = all_posts[page*20:page*20+20]
+    return render_template('post.html', posts=posts, pages=int(len(all_posts)/20), page=page)
 
 @app.route('/users')
 @login_required
