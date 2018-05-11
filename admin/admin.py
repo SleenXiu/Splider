@@ -35,6 +35,8 @@ app.config['CSRF_ENABLED'] = True
 app.config['SECRET_KEY'] = 'FDASGDASG'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+
 bootstrap.init_app(app)
 login_manager.init_app(app)
 
@@ -54,9 +56,10 @@ def index():
 def post():
     page = request.args.get("page") or 0
     page = int(page)
+    all_count = Post.objects.count()
     all_posts = Post.objects
     posts = all_posts[page*20:page*20+20]
-    return render_template('post.html', posts=posts, pages=int(len(all_posts)/20), page=page)
+    return render_template('post.html', posts=posts, pages=int(all_count/20), page=page)
 
 @app.route('/users')
 @login_required

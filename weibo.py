@@ -112,13 +112,13 @@ class WeiboSplider():
         params = {
             'type': 'uid',
             'value': userid,
-            'containerid': '1076031054009064',
+            'containerid': '107603'+userid,
             'page': 1,
             'count': 20
         }
         sl_id = 0
         mblogs = []
-        maxpage = 500
+        maxpage = 200
         for i in range(0, maxpage):
             params['page'] = i
             url = base_url + urllib.parse.urlencode(params)
@@ -149,7 +149,8 @@ class WeiboSplider():
             b = Post()
         b.origin_id = str(blog.get("id"))
         b.text = blog.get("text")
-        b.origin_at = blog.get("create_at")
+# b.origin_at = blog.get("created_at")
+        b.origin_url = "https://m.weibo.cn/status/"+b.origin_id
         b.text = blog.get("text")
         b.images = blog.get("pics")
         user = blog.get("user")
@@ -174,6 +175,8 @@ def testSearch():
 
 def testGet():
     id = '1054009064'
+    id = '2331621641'
+    id = '1774676624'
     sp.get_weiboes_by_userid(id)
 
 if __name__ == "__main__":
