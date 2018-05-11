@@ -24,6 +24,7 @@ class Post(Document):
     user_id = ObjectIdField()
     url = StringField()
     origin_url = StringField()
+    origin_id = StringField()
     author = StringField()
     author_id = StringField()
     text = StringField()

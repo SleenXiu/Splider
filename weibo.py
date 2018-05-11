@@ -118,7 +118,7 @@ class WeiboSplider():
         }
         sl_id = 0
         mblogs = []
-        maxpage = 10
+        maxpage = 500
         for i in range(0, maxpage):
             params['page'] = i
             url = base_url + urllib.parse.urlencode(params)
@@ -139,10 +139,15 @@ class WeiboSplider():
         return mblogs
 
     def _fixBlog(self, blog):
+
         print(blog)
         if blog is None:
             return None
-        b = Post()
+        tid = str(blog.get("id"))
+        b = Post.objects(origin_id=tid).first()
+        if b is None:
+            b = Post()
+        b.origin_id = str(blog.get("id"))
         b.text = blog.get("text")
         b.origin_at = blog.get("create_at")
         b.text = blog.get("text")
