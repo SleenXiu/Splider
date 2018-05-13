@@ -1,0 +1,90 @@
+{% extends "base.html" %} 
+{% block title %}Post-{{super()}}{% endblock %}
+{% block head %} 
+{{ super() }}
+<style>
+    .url-icon img{
+       width: 15px;
+    }
+    </style>
+{% endblock %} 
+{% block page_content %}
+<div>
+    <ul class="nav nav-tabs actions-nav">
+        <li class="active"><a href="javascript:void(0)">Posts</a></li>
+        <li><a href="#">Create</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                Add Filter<b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu field-filters">
+                <li><a href="javascript:void(0)" class="filter" onclick="return false;">Title</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div>
+        <table class="table table-bordered">
+                <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Url</th>
+                            <th>Author</th>
+                            <th>Text</th>
+                            <th>oid</th>
+                            <th>at</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for p in posts %}
+                            <tr>
+                                <th><a href="/weibo/{{p.id}}" target="blank">{{p.id}}</a></th>
+                                <th><a href="{{p.origin_url}}" target="blank">o_url</a></th>
+                                <th>{{p.extra.user.screen_name}}</th>
+                                <th>{{p.extra.text|safe}}</th>
+                                <th>{{p.extra.id}}</th>
+                                <th>{{p.extra.created_at}}</th>
+                                <th>
+                                    <button onclick="DeleteClick('{{p.id}}')">X</button>
+                                    <button onclick="EditClick('{{p.id}}')">E</button>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+        
+        </table>
+    </div>
+    <nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="/weibo?page=0" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% for i in range(0, pages+0) %}
+        
+        {% if i > page+5 %}
+         <li><a href="">...</a></li>
+        {% break %}
+        {% elif i == page-5 %}
+         <li><a href="">...</a></li>
+        {% elif i > 0 and i < page-5 %}
+        {% else %}
+        <li class="{% if i == page %}active{% else %}{% endif %}"><a href="/weibo?page={{i}}">{{i}}</a></li>
+        {% endif %}
+    {% endfor %}
+    <li class="{% if pages == page %}active{% else %}{% endif %}"><a href="/weibo?page={{pages}}">{{pages}}</a></li>
+    <li>
+      <a href="/weibo?page={{pages}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</div>
+{% endblock %} 
+{% block scripts %} 
+{{ super() }}
+<script>
+</script>
+{% endblock %}

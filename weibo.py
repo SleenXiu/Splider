@@ -8,6 +8,12 @@ import rsa, binascii, base64
 from weibo_config import Config
 from models import *
 import manager
+import sys
+from urllib3.exceptions import *
+from requests.exceptions import *
+
+def get_proxy():
+    return requests.get("http://116.196.65.230:8088/get/").content
 
 
 class WeiboSplider():
@@ -20,6 +26,7 @@ class WeiboSplider():
             'Accept-Encoding': 'gzip, deflate, br',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
+        self.re_get_proxy()
         
 
     def login(self, account, password):
@@ -158,6 +165,74 @@ class WeiboSplider():
         b.author_id = str(user.get("id"))
         return b
 
+    def re_get_proxy(self):
+        self.proxy = get_proxy().decode("utf8")
+
+    def get_status_by_id(self, status_id):
+        url = 'https://m.weibo.cn/status/' + status_id
+        proxy = self.proxy
+        proxies = {'http': 'http://{}'.format(proxy),'https': 'http://{}'.format(proxy)}
+        self.session.proxies = proxies
+        try:
+            resp = self.session.get(url, headers=self.headers, verify=False, timeout=2)
+            result = resp.text
+            data = re.findall(r'render_data = ([\s\S]*?)\[0\] \|\| \{\};', result)
+            if len(data) > 0:
+                obj = json.loads(data[0])
+                if len(obj) > 0:
+                    return obj[0]
+            return None
+        except requests.exceptions.ConnectTimeout:
+            self.re_get_proxy()
+            self.get_status_by_id(status_id)
+            print('timeout')
+        except requests.exceptions.ReadTimeout:
+            self.re_get_proxy()
+            self.get_status_by_id(status_id)
+            print('read timeout')
+        except HTTPError as e:
+            self.re_get_proxy()
+            self.get_status_by_id(status_id)
+            print(proxy+'fail')
+            # delete_proxy(proxy)
+        except ReadTimeoutError:
+            self.re_get_proxy()
+            self.get_status_by_id(status_id)
+            print('timeout')
+        except ConnectionError:
+            self.re_get_proxy()
+            self.get_status_by_id(status_id)
+            print('ConnectionError')
+        except KeyboardInterrupt:
+            sys.exit(0)
+        
+        
+
+    def fix_proxy(self):
+        url = 'http://ip.cn'
+        proxy = get_proxy().decode("utf8")
+        # self.session.proxies = {'http': 'http://{}'.format(proxy)}
+        print(proxy)
+        proxies = {'http': 'http://{}'.format(proxy),'https': 'http://{}'.format(proxy)}
+        print(proxies)
+        self.session.proxies = proxies
+        try:
+            resp = self.session.get(url, verify=False, timeout=2)
+            print(resp.text)
+        except requests.exceptions.ConnectTimeout:
+            print('timeout')
+        except requests.exceptions.ReadTimeout:
+            print('read timeout')
+        except HTTPError as e:
+            print(proxy+'fail')
+            # delete_proxy(proxy)
+        except ReadTimeoutError:
+            print('timeout')
+        except ConnectionError:
+            print('ConnectionError')
+        except KeyboardInterrupt:
+            sys.exit(0)
+
 sp = WeiboSplider()
 
 def testLogin():
@@ -179,7 +254,37 @@ def testGet():
     id = '1774676624'
     sp.get_weiboes_by_userid(id)
 
+def tesetFixStatus():
+    id = '4160725867915976'
+    s = sp.get_status_by_id(id)
+    print(s)
+
+import time
+def fixAllWeibo():
+    ps = Post.objects()
+    for p in ps:
+        print(p.origin_id)
+        w = Weibo.objects(org_id=p.origin_id).first()
+        if w:
+            print('did')
+            continue
+        s = sp.get_status_by_id(p.origin_id)
+        if s is None:
+            continue
+        w = Weibo()
+        status = s.get('status')
+        w.org_id = status.get('id')
+        w.extra = status #json.dumps(status)
+        w.save()
+
+def textProxy():
+    for i in range(0, 10):
+        sp.fix_proxy()
+
 if __name__ == "__main__":
     # testLogin()
     # testSearch()
-    testGet()
+    # testGet()   
+    # tesetFixStatus() 
+    fixAllWeibo()
+    # textProxy()

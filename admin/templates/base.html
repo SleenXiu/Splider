@@ -22,9 +22,7 @@ body {
 * {
     box-sizing: border-box;
 }
-.left-side {
 
-}
 .left-side ul {
     padding: 10px 0;
 }
@@ -34,6 +32,9 @@ body {
 }
 .left-sizd-menu li>a{
     margin-left: 10px;
+}
+.left-sizd-menu .active{
+    color: #e2e4e8;
 }
 </style>
 {% endblock %}
@@ -86,11 +87,12 @@ body {
     {% endfor %}
     <div class="row" style="margin-top:30px;">
         <div class="col-md-2 left-side">
-            <ul class="left-sizd-menu">
-                <li><a href="/">Home</a></li>
+            <ul class="left-sizd-menu" id='left-menu'>
+                <!-- <li><a href="/">Home</a></li> -->
                 <li><a href="{{url_for('post')}}">Post</a></li>
                 <li><a href="{{url_for('user.index')}}">User</a></li>
                 <li><a href="{{url_for('source')}}">Source</a></li>
+                <li><a href="{{url_for('weibo')}}">Weibo</a></li>
             </ul>
             
         </div>
@@ -100,4 +102,22 @@ body {
     </div>
     
 </div>
+{% endblock %}
+
+{% block scripts %} 
+{{ super() }}
+<script>
+       $(document).ready(function(){ 
+        var href = window.location.href;
+        var Uarry=$("#left-menu li");
+            for (var i in Uarry) {
+                a = Uarry[i].firstChild
+                if (a) {
+                    if (href.indexOf(a)>-1){
+                        a.setAttribute('class','active');
+                    }   
+                }
+            }
+       })
+</script>
 {% endblock %}

@@ -61,6 +61,32 @@ def post():
     posts = all_posts[page*20:page*20+20]
     return render_template('post.html', posts=posts, pages=int(all_count/20), page=page)
 
+
+@app.route('/weibo/<id>')
+@login_required
+def get_p(id):
+    p = Weibo.objects(id=ObjectId(id)).first()
+    from bson import json_util
+    import json
+    if p:
+        print(p.extra)
+        s = json_util.dumps(Weibo.objects._collection_obj.find(Weibo.objects(id=ObjectId(id))._query))
+        print(type(s))
+        ss = json.loads(s)
+        return jsonify(ss)
+    return jsonify({'msg':"not found"})
+
+
+@app.route('/weibo')
+@login_required
+def weibo():
+    page = request.args.get("page") or 0
+    page = int(page)
+    all_count = Weibo.objects.count()
+    all_posts = Weibo.objects
+    posts = all_posts[page*20:page*20+20]
+    return render_template('weibo.html', posts=posts, pages=int(all_count/20), page=page)
+
 @app.route('/users')
 @login_required
 def users():

@@ -25,6 +25,7 @@ class Post(Document):
     url = StringField()
     origin_url = StringField()
     origin_id = StringField()
+    origin_at = DateTimeField()
     author = StringField()
     author_id = StringField()
     text = StringField()
@@ -34,5 +35,17 @@ class Post(Document):
     images = ListField()
     source_id = StringField()
     create_at = DateTimeField(default=datetime.datetime.now)
-    origin_at = DateTimeField()
+    extra = DictField()
+
+class Weibo(Document):
+    meta = {
+        'db_alias': 'testdb',
+        'index_background': True,
+        'indexes': [
+        ],
+    }
+
+    id = ObjectIdField(primary_key=True, default=ObjectId)
+    x_create_at = DateTimeField(default=datetime.datetime.now)
+    org_id = IntField()
     extra = DictField()
