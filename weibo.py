@@ -142,7 +142,7 @@ class WeiboSplider():
                     blog.save()
                     mblogs.append(blog)
 
-        print(mblogs)
+#print(mblogs)
         return mblogs
 
     def _fixBlog(self, blog):
@@ -248,11 +248,12 @@ def testSearch():
     else:
         print("no find")
 
-def testGet():
+def testGet(uid):
     id = '1054009064'
     id = '2331621641'
     id = '1774676624'
-    sp.get_weiboes_by_userid(id)
+    id = "2686948620"
+    sp.get_weiboes_by_userid(uid)
 
 def tesetFixStatus():
     id = '4160725867915976'
@@ -260,8 +261,8 @@ def tesetFixStatus():
     print(s)
 
 import time
-def fixAllWeibo():
-    ps = Post.objects()
+def fixAllWeibo(uid):
+    ps = Post.objects(author_id=uid)
     for p in ps:
         print(p.origin_id)
         w = Weibo.objects(org_id=p.origin_id).first()
@@ -281,10 +282,22 @@ def textProxy():
     for i in range(0, 10):
         sp.fix_proxy()
 
+import sys
 if __name__ == "__main__":
+    arg = sys.argv[1]
+    uid = sys.argv[2]
+    print(sys.argv)
+    if arg == '1':
+        print('start get post')
+        testGet(uid)
+    elif arg == '2':
+        print('start get weibo')
+        fixAllWeibo(uid)
+    else:
+        print('nothing')
     # testLogin()
     # testSearch()
     # testGet()   
     # tesetFixStatus() 
-    fixAllWeibo()
+    # fixAllWeibo("2686948620")
     # textProxy()
