@@ -183,7 +183,7 @@ class WeiboSplider():
                     return obj[0]
             else:
                 self.re_get_proxy()
-                self.get_status_by_id(sratus_id)
+                self.get_status_by_id(status_id)
 
         except requests.exceptions.ConnectTimeout:
             self.re_get_proxy()
