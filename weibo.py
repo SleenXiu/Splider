@@ -181,7 +181,10 @@ class WeiboSplider():
                 obj = json.loads(data[0])
                 if len(obj) > 0:
                     return obj[0]
-            return None
+            else:
+                self.re_get_proxy()
+                self.get_status_by_id(sratus_id)
+
         except requests.exceptions.ConnectTimeout:
             self.re_get_proxy()
             self.get_status_by_id(status_id)
