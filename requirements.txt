@@ -9,3 +9,7 @@ mongoengine
 flask-bootstrap
 flask-login
 flask-wtf
+
+lxml
+
+cos-python-sdk-v5
