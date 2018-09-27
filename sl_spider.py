@@ -65,7 +65,7 @@ class Splider():
         times = datetime.datetime.fromtimestamp(int(date))
         
         
-        title = html.xpath('//title/text()')
+        title = html.xpath('//h2[@id="activity-name"]/text()')
         title = ''.join(title)
         title = title.strip()
 #        print(title)
