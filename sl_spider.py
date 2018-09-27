@@ -114,6 +114,9 @@ class Splider():
         content = etree.tostring(content1,encoding="utf8", pretty_print=True, method="html")
         content = content.decode('utf-8')
         content = re.sub(r' style=\"(.*?)\"', "", content)
+        content = re.sub(r'<p><br></p>', "", content)
+        content = re.sub(r'<p><span><br></span></p>', "", content)
+        
             #    print(content)
 
         images = html.xpath('//img/@data-src')
@@ -134,7 +137,7 @@ class Splider():
             mu = "src=\"" + mu + "\""
             content1 = content1.replace(url, mu)
             i = i + 1
-            
+        
 #        print(content1)
 
         result = {
@@ -157,8 +160,10 @@ class Splider():
         c = self.db_contents.find_one({"title":res["title"]})
         if c:
             print(c["title"])
+            return c["title"]
         c_id = self.db_contents.insert_one(res).inserted_id
         print(c_id)
+        return c_id
 
 sp = Splider()
 
