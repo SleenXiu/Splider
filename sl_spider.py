@@ -51,7 +51,8 @@ class Splider():
     def download_img(self, url):
         response = self.session.get(url, headers=self.headers)
         content = response.content
-        return upload_img(content, "")
+        c_type = response.headers['Content-Type']
+        return upload_img(content, "", c_type)
 
 
     def parse(self, ahtml):
@@ -168,7 +169,7 @@ class Splider():
 sp = Splider()
 
 
-f = open('/Users/qmp/Desktop/123.html')
+f = open('/Users/shilin/Desktop/123.html')
 a_html = f.read()
 
 

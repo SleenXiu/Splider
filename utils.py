@@ -23,14 +23,15 @@ def getFileMD5(file):
 
 baseUrl = 'http://shilin-1255431184.cos.ap-beijing.myqcloud.com/'
 
-def upload_img(image, file_name):
+def upload_img(image, file_name, c_type):
     file_name = getFileMD5(image)
     print(file_name)
     response = client.put_object(
         Bucket='shilin-1255431184',
         Body=image,
         Key=file_name,
-        StorageClass='STANDARD'
+        StorageClass='STANDARD',
+        ContentType=c_type
     )
     print(response['ETag'])
     return baseUrl + file_name
