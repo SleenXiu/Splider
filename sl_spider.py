@@ -13,7 +13,7 @@ from requests.exceptions import *
 from lxml import etree
 import hashlib
 import time, datetime
-from utils import upload_img
+from utils import upload_img, put_nsq
 import pymongo
 
 def get_proxy():
