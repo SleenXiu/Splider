@@ -102,13 +102,22 @@ class Splider():
             myurl = self.download_img(imurl2)
             myim.append(myurl)
             time.sleep(1)
+        
+        content2 = content
+        i = 0
+        for url in images:
+            mu = myim[i]
+            url = "src=\"" + url + "\""
+            mu = "src=\"" + mu + "\""
+            content2 = content2.replace(url, mu)
+            i = i + 1
 
         result = {
             "title": title,
             "author": author,
             "url": url,
             "org_id": id,
-            "content": content,
+            "content": content2,
             "date": times,
             "images": myim,
             "type": "douban"
