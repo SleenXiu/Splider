@@ -43,6 +43,7 @@ class Splider():
         client = pymongo.MongoClient(host="127.0.0.1", port=27017)
         db = client.wechatdb
         self.db_contents = db.content
+        self.article = client.articledb.article
 
     def get_html_by_url(self, url):
         response = self.session.get(url, headers=self.headers)
@@ -166,15 +167,35 @@ class Splider():
         print(c_id)
         return c_id
 
+    def save2(self, res):
+        n_res = {
+            "title": res["title"],
+            "author": res["wx_name"] + res["wx_author"],
+            "url": "",
+            "org_id": "",
+            "content": res["content"],
+            "date": res["wx_times"],
+            "images": res["images"],
+            "type": "wechat"
+        }
+        c = self.article.find_one({"title":res["title"]})
+        if c:
+            print(c["title"])
+            return c["title"]
+        c_id = self.article.insert_one(res).inserted_id
+        print(c_id)
+        return c_id
+
 sp = Splider()
 
 
-f = open('/Users/shilin/Desktop/123.html')
+f = open('/Users/qmp/Desktop/123.html')
 a_html = f.read()
 
 
 res1 = sp.parse(a_html)
 res = sp.save(res1)
+res = sp.save2(res1)
 
 
 
